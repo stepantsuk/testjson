@@ -36,7 +36,7 @@ window.addEventListener("DOMContentLoaded", function () {
     console.log("getData");
     const req = new XMLHttpRequest();
     req.open("GET", "./myTestJson.json");
-    // req.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    req.setRequestHeader("Content-type", "application/json; charset=utf-8");
     req.send();
 
     req.addEventListener("readystatechange", () => {
@@ -56,6 +56,11 @@ window.addEventListener("DOMContentLoaded", function () {
       // } else {
       // }
     });
+
+    // const getDataFetch = async () => {
+    //   let promise = await fetch("./myTestJson.json");
+    //   let commits = await response.json();
+    // };
   };
 
   getData();
