@@ -1,9 +1,4 @@
 window.addEventListener("DOMContentLoaded", function () {
-  const JSONContainer = document.querySelector(".listJSONContainer");
-  const listJSONItem = document.querySelector(".listJSONItem");
-  const JSContainer = document.querySelector(".listJSContainer");
-  const listJSItem = document.querySelector(".listJSItem");
-
   const dataToRender = [
     {
       title: "aaa",
@@ -21,49 +16,36 @@ window.addEventListener("DOMContentLoaded", function () {
       title: "eee",
     },
   ];
-
-  const createElements = (arr, className) => {
+  const createElements = (arr, classNameParent, classNameChild) => {
     arr.forEach((item) => {
-      const element = document.createElement("div");
-      element.innerHTML = `
-        <div class=${className}">${item.title}</div>
-        `;
-      JSONContainer.append(element);
+      const template = `
+      <div class=${classNameChild}>${item.title}</div>
+      `;
+      document.querySelector(`.${classNameParent}`).innerHTML += template;
     });
   };
 
-  const getData = () => {
-    console.log("getData");
-    const req = new XMLHttpRequest();
-    req.open("GET", "./myTestJson.json");
-    req.setRequestHeader("Content-type", "application/json; charset=utf-8");
-    req.send();
-
-    req.addEventListener("readystatechange", () => {
-      console.log("req", req);
-
-      if (req.readyState === 4 && req.status === 200) {
-        const data = JSON.parse(req.response);
-        createElements(data, "listJSONItem");
+  const getDataFetch = async () => {
+    try {
+      let response = await fetch("./myTestJson.json");
+      if (!response.ok) {
+        return null;
       }
 
-      // try {
-      //   // createElements(data, "listJSONItem");
-      // } catch (error) {
-      //   console.log(error);
-      // }
-      // if (req.readyState === 4 && req.status === 200) {
-      // } else {
-      // }
-    });
+      let data = await response.json();
 
-    // const getDataFetch = async () => {
-    //   let promise = await fetch("./myTestJson.json");
-    //   let commits = await response.json();
-    // };
+      return data;
+    } catch (error) {
+      console.log("error in getDataFetch ===>", error);
+    }
   };
 
-  getData();
+  getDataFetch()
+    .then((data) => {
+      console.log("createElements");
+      createElements(data, "listContainer", "listItem");
+    })
+    .catch((e) => console.log("error in chain ===>", e));
 
   console.log("endOfScript");
 
